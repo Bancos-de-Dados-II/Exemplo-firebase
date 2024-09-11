@@ -1,5 +1,6 @@
 import { initializeApp } from "firebase/app";
-import { getAuth, createUserWithEmailAndPassword, signInWithEmailAndPassword, onAuthStateChanged } from "firebase/auth";
+import { getAuth, createUserWithEmailAndPassword, 
+    signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
 import {} from 'dotenv/config';
 
 const firebaseConfig = {
@@ -50,4 +51,18 @@ async function fazerLogin(email, password){
 
 }
 
-fazerLogin('f.freitas@ifpb.edu.br', '123456');
+// fazerLogin('f.freitas@ifpb.edu.br', '654321');
+
+async function recuperarSenha(email){
+    sendPasswordResetEmail(auth, email)
+  .then(() => {
+    console.log('E-mail enviado');
+  })
+  .catch((error) => {
+    const errorCode = error.code;
+    const errorMessage = error.message;
+    console.log(errorMessage, errorCode);
+  });
+}
+
+recuperarSenha('f.freitas@ifpb.edu.br');
