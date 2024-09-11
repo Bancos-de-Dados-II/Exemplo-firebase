@@ -1,6 +1,7 @@
 import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, 
-    signInWithEmailAndPassword, sendPasswordResetEmail } from "firebase/auth";
+    signInWithEmailAndPassword, sendPasswordResetEmail, 
+    sendEmailVerification, updateProfile, signOut} from "firebase/auth";
 import {} from 'dotenv/config';
 
 const firebaseConfig = {
@@ -19,7 +20,10 @@ async function criarUsuario(email, password){
     createUserWithEmailAndPassword(auth, email, password)
     .then((userCredential) => {
       const user = userCredential.user;
-      console.log(user);
+      updateProfile(user, {emailVerified:false});
+      sendEmailVerification(user).then(()=>{
+        console.log('E-mail enviado');
+      });
     })
     .catch((error) => {
       const errorCode = error.code;
@@ -35,7 +39,12 @@ async function fazerLogin(email, password){
   .then((userCredential) => {
     // Signed in 
     const user = userCredential.user;
-    console.log(user);
+    if(!user.emailVerified){
+        console.log('Verificar e-mail');
+        signOut(auth);
+    }else{
+        console.log('Bem vindo');
+    }
   })
   .catch((error) => {
     const errorCode = error.code;
@@ -51,7 +60,7 @@ async function fazerLogin(email, password){
 
 }
 
-// fazerLogin('f.freitas@ifpb.edu.br', '654321');
+fazerLogin('f.freitas@ifpb.edu.br', '123456');
 
 async function recuperarSenha(email){
     sendPasswordResetEmail(auth, email)
@@ -65,4 +74,4 @@ async function recuperarSenha(email){
   });
 }
 
-recuperarSenha('f.freitas@ifpb.edu.br');
+// recuperarSenha('f.freitas@ifpb.edu.br');
