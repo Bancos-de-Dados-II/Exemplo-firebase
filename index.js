@@ -2,6 +2,8 @@ import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, 
     signInWithEmailAndPassword, sendPasswordResetEmail, 
     sendEmailVerification, updateProfile, signOut} from "firebase/auth";
+import { getStorage, ref, uploadBytes } from "firebase/storage";
+import fs from 'fs';
 import {} from 'dotenv/config';
 
 const firebaseConfig = {
@@ -15,6 +17,7 @@ const firebaseConfig = {
 
 const app = initializeApp(firebaseConfig);
 const auth = getAuth();
+const storage = getStorage(app);
 
 async function criarUsuario(email, password){
     createUserWithEmailAndPassword(auth, email, password)
@@ -60,7 +63,7 @@ async function fazerLogin(email, password){
 
 }
 
-fazerLogin('f.freitas@ifpb.edu.br', '123456');
+// fazerLogin('f.freitas@ifpb.edu.br', '123456');
 
 async function recuperarSenha(email){
     sendPasswordResetEmail(auth, email)
@@ -75,3 +78,14 @@ async function recuperarSenha(email){
 }
 
 // recuperarSenha('f.freitas@ifpb.edu.br');
+
+async function salvarImagem(){
+  const imagemRef = ref(storage, 'imagens/logo.png');
+  fs.readFile('ifpb.png', async (err, data)=>{
+    uploadBytes(imagemRef, data).then((snapshot) => {
+      console.log('Inserido');
+    });
+  });  
+}
+
+salvarImagem();
