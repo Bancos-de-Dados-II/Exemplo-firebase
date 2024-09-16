@@ -2,7 +2,7 @@ import { initializeApp } from "firebase/app";
 import { getAuth, createUserWithEmailAndPassword, 
     signInWithEmailAndPassword, sendPasswordResetEmail, 
     sendEmailVerification, updateProfile, signOut} from "firebase/auth";
-import { getStorage, ref, uploadBytes } from "firebase/storage";
+import { getDownloadURL, getStorage, ref, uploadBytes } from "firebase/storage";
 import fs from 'fs';
 import {} from 'dotenv/config';
 
@@ -88,4 +88,13 @@ async function salvarImagem(){
   });  
 }
 
-salvarImagem();
+// salvarImagem();
+
+async function baixaImagem(){
+  const imagemRef = ref(storage, 'imagens/logo.png');
+  getDownloadURL(imagemRef).then((url)=>{
+    console.log(url);
+  });
+}
+
+baixaImagem();
